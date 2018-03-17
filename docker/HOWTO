@@ -1,0 +1,6 @@
+1. Download the docker folder
+2. cd into it
+3. <sudo>* docker build -t signalr
+4. <sudo>* docker run signalr
+
+*if on linux
