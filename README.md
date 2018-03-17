@@ -4,18 +4,18 @@ It's mainly based on [TargetProcess signalR client](https://github.com/TargetPro
 
 I am mainly developing the client for my **[Python Bittrex Websocket](https://github.com/slazarov/python-bittrex-websocket)** project, however I would make it as universal as possible.
 
-The library will only work with Python3.
-
 # Road map
+- Error handling
 
-### Notices
+# Notices
 None right now.
 
-### Currently in development
 
-### Done
+# Compatibility
+Asyncio requires Python 3.4+.
 
-# Dependencies
+For Python2.X compatibility try [TargetProcess' gevent based SignalR client](https://github.com/TargetProcess/signalr-client-py).
+
 
 # Installation
 #### Pypi (most stable)
@@ -30,18 +30,17 @@ pip install git+https://github.com/slazarov/python-signalr-client.git
 ```python
 pip install git+https://github.com/slazarov/python-signalr-client.git@next-version-number
 ```
-# Methods
 
 # Sample usage
 
 # Change log
 
-0.0.0 - Not released. TBA...
+0.0.1.0 - Initial release.
 
 # Other libraries
 **[Python Bittrex Websocket](https://github.com/slazarov/python-bittrex-websocket)**
 
-Python websocket client ([SignalR](https://pypi.python.org/pypi/signalr-client/0.0.7)) for getting live streaming data from [Bittrex Exchange](http://bittrex.com).
+Python websocket client for getting live streaming data from [Bittrex Exchange](http://bittrex.com).
 
 
 **[Python Bittrex Autosell](https://github.com/slazarov/python-bittrex-autosell)**
