@@ -48,3 +48,6 @@ class Connection(object):
 
     def send(self, message):
         self.__transport.send(message)
+
+    def close(self):
+        self.__transport.close()

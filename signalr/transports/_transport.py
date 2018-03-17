@@ -6,6 +6,7 @@
 
 
 from ._parameters import WebSocketParameters
+from ._queue_events import InvokeEvent, CloseEvent
 from ujson import dumps, loads
 import asyncio
 import uvloop
@@ -33,10 +34,14 @@ class Transport:
         self.ws_loop.run_until_complete(self.socket(self.ws_loop))
 
     def send(self, message):
-        asyncio.Task(self.invoke_queue.put(message), loop=self.ws_loop)
+        asyncio.Task(self.invoke_queue.put(InvokeEvent(message)), loop=self.ws_loop)
+
+    def close(self):
+        asyncio.Task(self.invoke_queue.put(CloseEvent()), loop=self.ws_loop)
 
     async def socket(self, loop):
-        async with websockets.connect(self._ws_params.socket_url, extra_headers=self._ws_params.headers) as ws:
+        async with websockets.connect(self._ws_params.socket_url, extra_headers=self._ws_params.headers,
+                                      loop=loop) as ws:
             self._connection.started = True
             await self.handler(ws)
 
@@ -52,17 +57,23 @@ class Transport:
             task.cancel()
 
     async def consumer_handler(self, ws):
-        async for message in ws:
-            if len(message) > 0:
-                data = loads(message)
-                await self._connection.received.fire(**data)
+        try:
+            async for message in ws:
+                if len(message) > 0:
+                    data = loads(message)
+                    await self._connection.received.fire(**data)
+        except Exception as e:
+            raise e
 
     async def producer_handler(self, ws):
         while True:
             try:
-                message = await self.invoke_queue.get()
-                if message is not None:
-                    await ws.send(dumps(message))
+                event = await self.invoke_queue.get()
+                if event is not None:
+                    if event.type == 'INVOKE':
+                        await ws.send(dumps(event.message))
+                    elif event.type == 'CLOSE':
+                        await ws.close(code=1000, reason='lol')
                 else:
                     break
             except Exception as e:
