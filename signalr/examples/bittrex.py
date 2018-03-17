@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# signalr/examples/_bittrex.py
 # Stanislav Lazarov
 
 # A practical example showing how to connect to Bittrex
@@ -44,5 +43,3 @@ if __name__ == "__main__":
 
     # Start the client
     connection.start()
-
-    print('lol')
