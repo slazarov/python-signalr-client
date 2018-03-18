@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# signalr/transports/_transport.py
+# signalr_aio/transports/_transport.py
 # Stanislav Lazarov
 
 

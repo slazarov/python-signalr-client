@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# signalr/_connection.py
+# signalr_aio/_connection.py
 # Stanislav Lazarov
 
 

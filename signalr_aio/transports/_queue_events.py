@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# signalr/transports/_queue_events.py
+# signalr_aio/transports/_queue_events.py
 # Stanislav Lazarov
 
 class Event(object):

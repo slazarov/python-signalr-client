@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# signalr/events/_events.py
+# signalr_aio/events/_events.py
 # Stanislav Lazarov
 
 # Structure inspired by https://github.com/TargetProcess/signalr-client-py
