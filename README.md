@@ -12,7 +12,7 @@ None right now.
 
 
 # Compatibility
-Asyncio requires Python 3.4+.
+Asyncio requires Python 3.5+.
 
 For Python2.X compatibility try [TargetProcess' gevent based SignalR client](https://github.com/TargetProcess/signalr-client-py).
 
