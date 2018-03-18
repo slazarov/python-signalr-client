@@ -23,7 +23,7 @@ setup(
     install_requires=install_requires,
     description='Simple python SignalR client using asyncio.',
     download_url='https://github.com/slazarov/python-signalr-client.git',
-    keywords=['signalr', 'sginalr-weboscket', 'signalr_aio-client', 'signalr_aio-asyncio'],
+    keywords=['signalr', 'sginalr-weboscket', 'signalr-client', 'signalr-asyncio', 'signalr-aio'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
