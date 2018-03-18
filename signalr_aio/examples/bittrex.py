@@ -24,7 +24,7 @@ async def on_message(msg):
 
 if __name__ == "__main__":
     # Create connection
-    connection = Connection('https://socket-stage.bittrex.com/signalr_aio/')
+    connection = Connection('https://socket-stage.bittrex.com/signalr/')
 
     # Register hub
     hub = connection.register_hub('coreHub')
