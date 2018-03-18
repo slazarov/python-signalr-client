@@ -29,6 +29,8 @@ class WebSocketParameters:
     def _clean_url(url):
         if url[-1] == '/':
             return url[:-1]
+        else:
+            return url
 
     @staticmethod
     def _get_conn_data(hub):
