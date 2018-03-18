@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# signalr/hubs/_hub.py
+# signalr_aio/hubs/_hub.py
 # Stanislav Lazarov
 
 

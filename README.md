@@ -20,7 +20,7 @@ For Python2.X compatibility try [TargetProcess' gevent based SignalR client](htt
 # Installation
 #### Pypi (most stable)
 ```python
-pip install xxx
+pip install signalr_client_aio
 ```
 #### Github (master)
 ```python

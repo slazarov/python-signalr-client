@@ -13,17 +13,17 @@ install_requires = \
     ]
 
 setup(
-    name='signalr-client-aio',
+    name='signalr_aio-client-aio',
     version='0.0.1',
     author='Stanislav Lazarov',
     author_email='s.a.lazarov@gmail.com',
     license='MIT',
-    url='https://github.com/slazarov/python-signalr-client',
+    url='https://github.com/slazarov/python-signalr_aio-client',
     packages=find_packages(exclude=['tests*']),
     install_requires=install_requires,
     description='Simple python SignalR client using asyncio.',
-    download_url='https://github.com/slazarov/python-signalr-client.git',
-    keywords=['signalr', 'sginalr-weboscket', 'signalr-client', 'signalr-asyncio'],
+    download_url='https://github.com/slazarov/python-signalr_aio-client.git',
+    keywords=['signalr_aio', 'sginalr-weboscket', 'signalr_aio-client', 'signalr_aio-asyncio'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',

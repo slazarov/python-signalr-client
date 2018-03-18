@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# signalr/examples/_bittrex.py
+# signalr_aio/examples/_bittrex.py
 # Stanislav Lazarov
 
 # A practical example showing how to connect to Bittrex
-from signalr import Connection
+from signalr_aio import Connection
 
 
 # Create debug message handler.
@@ -25,7 +25,7 @@ async def on_message(msg):
 
 if __name__ == "__main__":
     # Create connection
-    connection = Connection('https://socket-stage.bittrex.com/signalr/')
+    connection = Connection('https://socket-stage.bittrex.com/signalr_aio/')
 
     # Register hub
     hub = connection.register_hub('coreHub')

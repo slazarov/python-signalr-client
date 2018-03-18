@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# signalr/transports/_transport.py
+# signalr_aio/transports/_transport.py
 # Stanislav Lazarov
 
-
+from ._exceptions import ConnectionClosed
 from ._parameters import WebSocketParameters
 from ._queue_events import InvokeEvent, CloseEvent
 from ujson import dumps, loads
@@ -46,12 +46,16 @@ class Transport:
             await self.handler(ws)
 
     async def handler(self, ws):
-        consumer_task = asyncio.ensure_future(self.consumer_handler(ws))
-        producer_task = asyncio.ensure_future(self.producer_handler(ws))
+        consumer_task = asyncio.ensure_future(self.consumer_handler(ws), loop=self.ws_loop)
+        producer_task = asyncio.ensure_future(self.producer_handler(ws), loop=self.ws_loop)
         done, pending = await asyncio.wait(
             [consumer_task, producer_task],
             return_when=asyncio.FIRST_COMPLETED,
         )
+
+        # done, pending = await asyncio.gather(consumer_task, producer_task,
+        #                                      loop=self.ws_loop, return_exceptions=False
+        # )
 
         for task in pending:
             task.cancel()
@@ -63,7 +67,7 @@ class Transport:
                     data = loads(message)
                     await self._connection.received.fire(**data)
         except Exception as e:
-            raise e
+            raise Exception
 
     async def producer_handler(self, ws):
         while True:
