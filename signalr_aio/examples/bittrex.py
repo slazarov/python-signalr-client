@@ -30,7 +30,7 @@ if __name__ == "__main__":
     hub = connection.register_hub('coreHub')
 
     # Assign debug message handler. It streams unfiltered data, uncomment it to test.
-    # connection.received += on_debug
+    #connection.received += on_debug
 
     # Assign error handler
     connection.error += on_error
@@ -40,6 +40,7 @@ if __name__ == "__main__":
 
     # Send a message
     hub.server.invoke('SubscribeToExchangeDeltas', 'BTC-ETH')
+    #hub.server.invoke('queryExchangeState', 'BTC-NEO')
 
     # Start the client
     connection.start()

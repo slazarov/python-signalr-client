@@ -48,14 +48,13 @@ class Transport:
     async def handler(self, ws):
         consumer_task = asyncio.ensure_future(self.consumer_handler(ws), loop=self.ws_loop)
         producer_task = asyncio.ensure_future(self.producer_handler(ws), loop=self.ws_loop)
-        done, pending = await asyncio.wait(
-            [consumer_task, producer_task],
-            return_when=asyncio.FIRST_COMPLETED,
-        )
-
-        # done, pending = await asyncio.gather(consumer_task, producer_task,
-        #                                      loop=self.ws_loop, return_exceptions=False
+        # done, pending = await asyncio.wait(
+        #     [consumer_task, producer_task],
+        #     return_when=asyncio.FIRST_COMPLETED,
         # )
+
+        done, pending = await asyncio.gather(consumer_task, producer_task,
+                                             loop=self.ws_loop, return_exceptions=False)
 
         for task in pending:
             task.cancel()
