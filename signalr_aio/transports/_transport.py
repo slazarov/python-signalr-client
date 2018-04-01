@@ -25,7 +25,7 @@ class Transport:
         self._set_loop()
 
     def _set_loop(self):
-        self.ws_loop = asyncio.new_event_loop()
+        self.ws_loop = asyncio.get_event_loop()
         asyncio.set_event_loop(self.ws_loop)
         self.invoke_queue = asyncio.Queue(loop=self.ws_loop)
 
