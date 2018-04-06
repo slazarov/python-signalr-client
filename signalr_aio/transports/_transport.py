@@ -7,7 +7,11 @@
 from ._exceptions import ConnectionClosed
 from ._parameters import WebSocketParameters
 from ._queue_events import InvokeEvent, CloseEvent
-from ujson import dumps, loads
+
+try:
+    from ujson import dumps, loads
+except:
+    from json import dumps, loads
 import asyncio
 import uvloop
 import websockets

@@ -3,18 +3,14 @@
 from setuptools import setup, find_packages
 
 install_requires = \
-    [
-        'aiocfscrape>=0.0.4',
-        'aiohttp>=3.0.9',
-        'Js2Py>=0.59',
-        'ujson>=1.35',
-        'uvloop>=0.9.1',
-        'websockets>=4.0.1'
-    ]
+    ['requests>=2.18.4',
+     'uvloop>=0.9.1',
+     'websockets>=4.0.1'
+     ]
 
 setup(
     name='signalr-client-aio',
-    version='0.0.1.3',
+    version='0.0.1.5',
     author='Stanislav Lazarov',
     author_email='s.a.lazarov@gmail.com',
     license='MIT',

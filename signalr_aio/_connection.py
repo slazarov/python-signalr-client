@@ -13,11 +13,12 @@ from .transports import Transport
 class Connection(object):
     protocol_version = '1.5'
 
-    def __init__(self, url):
+    def __init__(self, url, session=None):
         self.url = url
         self.__hubs = {}
         self.__send_counter = -1
         self.hub = None
+        self.session = session
         self.received = EventHook()
         self.error = EventHook()
         self.__transport = Transport(self)
