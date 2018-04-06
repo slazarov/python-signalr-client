@@ -5,20 +5,15 @@
 # Stanislav Lazarov
 
 
-from aiocfscrape import CloudflareScraper
 from json import dumps
 from urllib.parse import urlparse, urlunparse, urlencode
-import asyncio
-import uvloop
-
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+import cfscrape
 
 
 class WebSocketParameters:
     def __init__(self, connection):
         self.protocol_version = '1.5'
         self.raw_url = self._clean_url(connection.url)
-        self.loop = self._set_loop()
         self.conn_data = self._get_conn_data(connection.hub)
         self.headers = None
         self.socket_conf = None
@@ -38,30 +33,20 @@ class WebSocketParameters:
         return conn_data
 
     @staticmethod
-    def _set_loop():
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        return loop
-
-    @staticmethod
     def _format_url(url, action, query):
         return '{url}/{action}?{query}'.format(url=url, action=action, query=query)
 
     def _negotiate(self):
-        self.loop.run_until_complete(self._negotiate_data(self.loop))
-
-    async def _negotiate_data(self, loop):
+        scraper = cfscrape.CloudflareScraper()
         query = urlencode({
             'connectionData': self.conn_data,
             'clientProtocol': self.protocol_version,
         })
         url = self._format_url(self.raw_url, 'negotiate', query)
-
-        async with CloudflareScraper(loop=loop) as session:
-            async with session.get(url) as r:
-                self.socket_conf = await r.json()
-
-        self.headers = dict(r._request_info.headers)
+        cookie_value, user_agent = cfscrape.get_cookie_string(url)
+        self.headers = dict(scraper.headers)
+        self.headers['Cookie'] = cookie_value
+        self.socket_conf = scraper.get(url).json()
 
     def _get_socket_url(self):
         ws_url = self._get_ws_url_from()
@@ -78,4 +63,5 @@ class WebSocketParameters:
         parsed = urlparse(self.raw_url)
         scheme = 'wss' if parsed.scheme == 'https' else 'ws'
         url_data = (scheme, parsed.netloc, parsed.path, parsed.params, parsed.query, parsed.fragment)
+
         return urlunparse(url_data)
