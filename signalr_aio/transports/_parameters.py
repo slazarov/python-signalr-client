@@ -7,7 +7,7 @@
 
 from json import dumps
 from urllib.parse import urlparse, urlunparse, urlencode
-import cfscrape
+import requests
 
 
 class WebSocketParameters:
@@ -15,6 +15,7 @@ class WebSocketParameters:
         self.protocol_version = '1.5'
         self.raw_url = self._clean_url(connection.url)
         self.conn_data = self._get_conn_data(connection.hub)
+        self.session = connection.session
         self.headers = None
         self.socket_conf = None
         self._negotiate()
@@ -37,16 +38,24 @@ class WebSocketParameters:
         return '{url}/{action}?{query}'.format(url=url, action=action, query=query)
 
     def _negotiate(self):
-        scraper = cfscrape.CloudflareScraper()
+        if self.session is None:
+            self.session = requests.Session()
         query = urlencode({
             'connectionData': self.conn_data,
             'clientProtocol': self.protocol_version,
         })
         url = self._format_url(self.raw_url, 'negotiate', query)
-        cookie_value, user_agent = cfscrape.get_cookie_string(url)
-        self.headers = dict(scraper.headers)
-        self.headers['Cookie'] = cookie_value
-        self.socket_conf = scraper.get(url).json()
+        self.headers = dict(self.session.headers)
+        request = self.session.get(url)
+        self.headers['Cookie'] = self._get_cookie_str(request.cookies)
+        self.socket_conf = request.json()
+
+    @staticmethod
+    def _get_cookie_str(request):
+        return '; '.join([
+            '%s=%s' % (name, value)
+            for name, value in request.items()
+        ])
 
     def _get_socket_url(self):
         ws_url = self._get_ws_url_from()
