@@ -82,5 +82,6 @@ class Transport:
                         await ws.close(code=1000, reason='lol')
                 else:
                     break
+                self.invoke_queue.task_done()
             except Exception as e:
                 print(e)
