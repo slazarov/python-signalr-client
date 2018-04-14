@@ -13,7 +13,7 @@ from zlib import decompress, MAX_WBITS
 import json
 
 
-def process_message(message):
+async def process_message(message):
     deflated_msg = decompress(b64decode(message), -MAX_WBITS)
     return json.loads(deflated_msg.decode())
 
@@ -22,7 +22,7 @@ def process_message(message):
 async def on_debug(**msg):
     # In case of 'queryExchangeState'
     if 'R' in msg and type(msg['R']) is not bool:
-        decoded_msg = process_message(msg['R'])
+        decoded_msg = await process_message(msg['R'])
         print(decoded_msg)
 
 
@@ -33,7 +33,7 @@ async def on_error(msg):
 
 # Create hub message handler
 async def on_message(msg):
-    decoded_msg = process_message(msg[0])
+    decoded_msg = await process_message(msg[0])
     print(decoded_msg)
 
 
