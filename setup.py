@@ -10,7 +10,7 @@ install_requires = \
 
 setup(
     name='signalr-client-aio',
-    version='0.0.1.5',
+    version='0.0.1.6',
     author='Stanislav Lazarov',
     author_email='s.a.lazarov@gmail.com',
     license='MIT',
