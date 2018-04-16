@@ -11,7 +11,7 @@ I am mainly developing the client for my **[Python Bittrex Websocket](https://gi
 None right now.
 
 # Performance and supplemental libraries
-* For better performances users can install `uvloop` and `ujson` which are automatically detected.
+* For better performance users can install `uvloop` and `ujson` which are automatically detected.
 * Users can pass a custom session to the client, i.e a [`cfscrape`](https://github.com/Anorov/cloudflare-scrape) session in order to bypass Cloudflare.
 
 # Compatibility
