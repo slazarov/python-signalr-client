@@ -4,13 +4,12 @@ from setuptools import setup, find_packages
 
 install_requires = \
     ['requests>=2.18.4',
-     'uvloop>=0.9.1',
      'websockets>=4.0.1'
      ]
 
 setup(
     name='signalr-client-aio',
-    version='0.0.1.6.1',
+    version='0.0.1.6.2',
     author='Stanislav Lazarov',
     author_email='s.a.lazarov@gmail.com',
     license='MIT',

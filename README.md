@@ -10,19 +10,14 @@ I am mainly developing the client for my **[Python Bittrex Websocket](https://gi
 # Notices
 None right now.
 
-# Supplemental libraries
-* For better performance users can install `ujson` which is automatically detected and overrides `json`.
-
+# Performance and supplemental libraries
+* For better performances users can install `uvloop` and `ujson` which are automatically detected.
 * Users can pass a custom session to the client, i.e a [`cfscrape`](https://github.com/Anorov/cloudflare-scrape) session in order to bypass Cloudflare.
-
-
-
 
 # Compatibility
 Asyncio requires Python 3.5+.
 
 For Python2.X compatibility try [TargetProcess' gevent based SignalR client](https://github.com/TargetProcess/signalr-client-py).
-
 
 # Installation
 #### Pypi (most stable)
@@ -94,6 +89,9 @@ if __name__ == "__main__":
 ```
 
 # Change log
+0.0.1.6.2 - 16/04/2018:
+* * Removed `uvloop` as a requirement. However, it will be detected and utilized if installed.
+
 0.0.1.5 - 06/04/2018:
 * Removed `cfscrape` from package. Users can optionally pass a `cfscrape` session to clients.
 * Removed `ujson`. The package will automatically detect if the user chooses to use `ujson`.

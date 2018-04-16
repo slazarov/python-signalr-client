@@ -12,11 +12,15 @@ try:
     from ujson import dumps, loads
 except:
     from json import dumps, loads
-import asyncio
-import uvloop
 import websockets
+import asyncio
 
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+try:
+    import uvloop
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+except ModuleNotFoundError:
+    pass
 
 
 class Transport:
