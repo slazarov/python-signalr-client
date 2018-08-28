@@ -4,13 +4,17 @@
 # signalr_aio/transports/_transport.py
 # Stanislav Lazarov
 
+# -----------------------------------
+# Internal Imports
 from ._exceptions import ConnectionClosed
 from ._parameters import WebSocketParameters
 from ._queue_events import InvokeEvent, CloseEvent
 
+# -----------------------------------
+# External Imports
 try:
     from ujson import dumps, loads
-except:
+except ModuleNotFoundError:
     from json import dumps, loads
 import websockets
 import asyncio
@@ -27,26 +31,20 @@ class Transport:
     def __init__(self, connection):
         self._connection = connection
         self._ws_params = None
+        self._conn_handler = None
         self.ws_loop = None
         self.invoke_queue = None
-        self.futures = []
         self.ws = None
-        self._set_loop()
+        self._set_loop_and_queue()
 
-    def _set_loop(self):
-        try:
-            self.ws_loop = asyncio.get_event_loop()
-        except RuntimeError:
-            self.ws_loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.ws_loop)
-        self.invoke_queue = asyncio.Queue(loop=self.ws_loop)
+    # ===================================
+    # Public Methods
 
     def start(self):
         self._ws_params = WebSocketParameters(self._connection)
+        self._connect()
         if not self.ws_loop.is_running():
-            self.ws_loop.run_until_complete(self.socket(self.ws_loop))
-        else:
-            self.futures.append(asyncio.ensure_future(self.socket(self.ws_loop), loop=self.ws_loop))
+            self.ws_loop.run_forever()
 
     def send(self, message):
         asyncio.Task(self.invoke_queue.put(InvokeEvent(message)), loop=self.ws_loop)
@@ -54,32 +52,43 @@ class Transport:
     def close(self):
         asyncio.Task(self.invoke_queue.put(CloseEvent()), loop=self.ws_loop)
 
-    async def socket(self, loop):
+    # -----------------------------------
+    # Private Methods
+
+    def _set_loop_and_queue(self):
+        try:
+            self.ws_loop = asyncio.get_event_loop()
+        except RuntimeError:
+            self.ws_loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.ws_loop)
+        self.invoke_queue = asyncio.Queue(loop=self.ws_loop)
+
+    def _connect(self):
+        self._conn_handler = asyncio.ensure_future(self._socket(self.ws_loop), loop=self.ws_loop)
+
+    async def _socket(self, loop):
         async with websockets.connect(self._ws_params.socket_url, extra_headers=self._ws_params.headers,
                                       loop=loop) as self.ws:
             self._connection.started = True
-            await self.handler(self.ws)
+            await self._master_handler(self.ws)
 
-    async def handler(self, ws):
-        consumer_task = asyncio.ensure_future(self.consumer_handler(ws), loop=self.ws_loop)
-        producer_task = asyncio.ensure_future(self.producer_handler(ws), loop=self.ws_loop)
-        self.futures.append(consumer_task)
-        self.futures.append(producer_task)
-
-        done, pending = await asyncio.gather(consumer_task, producer_task,
-                                             loop=self.ws_loop, return_exceptions=False)
+    async def _master_handler(self, ws):
+        consumer_task = asyncio.ensure_future(self._consumer_handler(ws), loop=self.ws_loop)
+        producer_task = asyncio.ensure_future(self._producer_handler(ws), loop=self.ws_loop)
+        done, pending = await asyncio.wait([consumer_task, producer_task],
+                                           loop=self.ws_loop, return_when=asyncio.FIRST_EXCEPTION)
 
         for task in pending:
             task.cancel()
 
-    async def consumer_handler(self, ws):
+    async def _consumer_handler(self, ws):
         while True:
             message = await ws.recv()
             if len(message) > 0:
                 data = loads(message)
                 await self._connection.received.fire(**data)
 
-    async def producer_handler(self, ws):
+    async def _producer_handler(self, ws):
         while True:
             try:
                 event = await self.invoke_queue.get()
@@ -89,7 +98,7 @@ class Transport:
                     elif event.type == 'CLOSE':
                         await ws.close()
                         while ws.open is True:
-                            asyncio.sleep(0.1)
+                            await asyncio.sleep(0.1)
                         else:
                             self._connection.started = False
                             break
