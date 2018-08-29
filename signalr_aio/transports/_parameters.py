@@ -23,10 +23,7 @@ class WebSocketParameters:
 
     @staticmethod
     def _clean_url(url):
-        if url[-1] == '/':
-            return url[:-1]
-        else:
-            return url
+        return url[:-1] if url[-1] == '/' else url
 
     @staticmethod
     def _get_conn_data(hub):

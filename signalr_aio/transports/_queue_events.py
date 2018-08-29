@@ -4,7 +4,8 @@
 # signalr_aio/transports/_queue_events.py
 # Stanislav Lazarov
 
-class Event(object):
+
+class Event:
     """
     Event is base class providing an interface
     for all subsequent(inherited) events.

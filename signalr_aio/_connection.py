@@ -8,13 +8,27 @@
 from .events import EventHook
 from .hubs import Hub
 from .transports import Transport
+import requests
 
 
-class Connection(object):
+class Connection:
     protocol_version = '1.5'
 
-    def __init__(self, url, session=None):
+    def __init__(self, url, session=None, max_reconnects=5, timeout=10):
+        """
+
+        :param url: SignalR connecting URL string.
+        :type url: str
+        :param session: Users can inject their own session, leave as None for default.
+        :type session: requests.Session or None
+        :param max_reconnects: Max number of reconnects before the socket stops retring.
+        :type max_reconnects: int
+        :param timeout: Max number of time in seconds between messages to wait for before timeout.
+        :type timeout: int
+        """
         self.url = url
+        self.max_reconnects = max_reconnects
+        self.timeout = timeout
         self.__hubs = {}
         self.__send_counter = -1
         self.hub = None
