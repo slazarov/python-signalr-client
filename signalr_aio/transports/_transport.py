@@ -4,6 +4,12 @@
 # signalr_aio/transports/_transport.py
 # Stanislav Lazarov
 
+# python compatiblity for <3.6
+try:
+    ModuleNotFoundError
+except NameError:
+    ModuleNotFoundError = ImportError
+
 # -----------------------------------
 # Internal Imports
 from ._exceptions import ConnectionClosed
