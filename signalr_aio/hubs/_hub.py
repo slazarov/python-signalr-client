@@ -22,7 +22,7 @@ class HubServer:
         message = {
             'H': self.name,
             'M': method,
-            'A': data,
+            'A': data[0] if len(data) == 1 else data,
             'I': self.__connection.increment_send_counter()
         }
         self.__connection.send(message)
