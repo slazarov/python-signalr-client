@@ -67,7 +67,7 @@ class Transport:
         except RuntimeError:
             self.ws_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.ws_loop)
-        self.invoke_queue = asyncio.Queue(loop=self.ws_loop)
+        self.invoke_queue = asyncio.Queue()
 
     def _connect(self):
         self._conn_handler = asyncio.ensure_future(self._socket(self.ws_loop), loop=self.ws_loop)
@@ -81,8 +81,7 @@ class Transport:
     async def _master_handler(self, ws):
         consumer_task = asyncio.ensure_future(self._consumer_handler(ws), loop=self.ws_loop)
         producer_task = asyncio.ensure_future(self._producer_handler(ws), loop=self.ws_loop)
-        done, pending = await asyncio.wait([consumer_task, producer_task],
-                                           loop=self.ws_loop, return_when=asyncio.FIRST_EXCEPTION)
+        done, pending = await asyncio.wait([consumer_task, producer_task], return_when=asyncio.FIRST_EXCEPTION)
 
         for task in pending:
             task.cancel()
